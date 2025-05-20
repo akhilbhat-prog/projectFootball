@@ -21,6 +21,7 @@ class PlayerSummary(BaseModel):
     stats: Dict[str, int] = Field(
         description="Overall stats like games, goals and assists"
     )
+    image_url: str = Field(description="A URL to an image of the player")
 
 
 output_parser = PydanticOutputParser(pydantic_object=PlayerSummary)
@@ -53,7 +54,7 @@ extract a structured summary of their career in this format:
 
 {format_instructions}
 
-Only output valid JSON. Do not explain."""
+Only output valid JSON. Do not explain. Include a link to a good photo of the player as 'image_url'."""
 
 react_prompt = hub.pull("hwchase17/react")
 
