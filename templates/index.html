@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Soccer Player Agent</title>
+  <style>
+    .circle-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <h1>Soccer Career Info</h1>
+  <form id="player-form">
+    <input type="text" name="player" placeholder="Enter player name" required />
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="output" style="margin-top: 20px;"></div>
+
+  <script>
+    const form = document.getElementById("player-form");
+    const outputDiv = document.getElementById("output");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch("/process", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        outputDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+      } else {
+        outputDiv.innerHTML = `
+          <h2>Summary</h2>
+          <p>${data.summary}</p>
+          <h3>Clubs</h3>
+          <ul>${data.clubs.map(c => `<li>${c}</li>`).join("")}</ul>
+          <h3>Achievements</h3>
+          <ul>${data.achievements.map(a => `<li>${a}</li>`).join("")}</ul>
+          <h3>Stats</h3>
+          <ul>${Object.entries(data.stats).map(([k, v]) => `<li>${k}: ${v}</li>`).join("")}</ul>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
